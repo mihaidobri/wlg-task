@@ -31,8 +31,8 @@ public class CalculatorsTest {
 
     @Before
     public void setUp() {
-        calPage.get();
         ((SnapRule) snapRule).setSnapable(calPage);
+        calPage.get();
     }
 
     @Test
@@ -59,11 +59,6 @@ public class CalculatorsTest {
     @Test
     public void h1MortgageTextTest(){
         Assert.assertEquals(calPage.getH1Mortgage(), "Mortgage calculators");
-    }
-
-    @After
-    public void tearDown() {
-
     }
 
     @AfterClass
