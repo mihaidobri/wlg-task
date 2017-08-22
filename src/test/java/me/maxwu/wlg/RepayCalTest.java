@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Test Suite for Repayments Calculator.
- *
+ * General visibility and scenario adjustment tests are introduced.
+ * Interest rates, length, other detail function tests and rainy day tests are not covered
+ *     with current sample baseline.
  */
 public class RepayCalTest {
     static Logger logger = LoggerFactory.getLogger(RepayCalTest.class.getName());
