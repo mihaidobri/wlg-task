@@ -29,6 +29,8 @@ Two environment variables are introduced to control browser type and headless mo
 
 By default, the test is performed with Chrome in headless mode on travis and development environment.
 
+For more details on dependencies installation, readers could find them in ".travis.yml", the YAML config for Travis.
+
 ## Work Notes
  - 20 Aug: Analysis on page structures and framework setup.
    - Add smoke test with mortgage calculators page and repayment calculator page.
