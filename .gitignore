@@ -8,6 +8,9 @@
 # Log file
 *.log
 
+# Screenshots
+*.png
+
 # Package Files #
 *.jar
 *.war
