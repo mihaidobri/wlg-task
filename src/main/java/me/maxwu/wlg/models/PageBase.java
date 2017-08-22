@@ -1,5 +1,4 @@
-package me.maxwu.wlg.pages;
-
+package me.maxwu.wlg.models;
 
 import java.util.concurrent.TimeUnit;
 import me.maxwu.wlg.log.TimeStamp;
@@ -11,16 +10,24 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.qatools.ashot.AShot;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
-
-
 import javax.imageio.ImageIO;
 import java.io.File;
 
-public class PageBase implements Snapable {
+/**
+ * Base type for page object model.
+ * Page Base provides common browser URL and title check, as well as the supporting methods
+ *     over web driver. The common supporting methods are screenshot, zooming and web driver
+ *     creation/quit procedures.
+ *
+ * INFO: Specific page models shall derive from this type.
+ * INFO: For redirected pages, it is suggested to pick URL check with fluent wait.
+ * INFO: Fluent wait is only on URL check for now with PageBase sample implementation.
+ */
+public class PageBase implements ISnapable {
     WebDriver driver = null;
     private static Logger logger = LoggerFactory.getLogger(PageBase.class.getName());
     private int driverHashCode;
@@ -29,6 +36,13 @@ public class PageBase implements Snapable {
     // No default title check with wildcard.
     private String titleRegEx = ".*";
 
+    /**
+     * The implementation on page screenshot based on web driver.
+     * As for phantomjs, it is full page screenshot. However, customization and testing works
+     *     are not completed on other browsers.
+     * INFO: To update to a full page screenshot supports before official testing application.
+     * @param caseName The test case name used in screenshot png filename.
+     */
     public void saveScreenShot(String caseName) {
         String pathName = TimeStamp.getTs() + "_" + caseName + ".png";
 
@@ -44,19 +58,6 @@ public class PageBase implements Snapable {
         }catch (Exception e){
             logger.error("Error in saving snapshot with driver: " + e);
         }
-
-        // AShot screenshot on full page.
-       /* try {
-            ImageIO.write(
-                new AShot()
-                .shootingStrategy(ShootingStrategies.viewportPasting(1000))
-                .takeScreenshot(driver).getImage(),
-                "png",
-                new File( pathName)
-            );
-        }catch (Exception e){
-            logger.error("Error on saving snapshot with AShot: " + e);
-        }*/
     }
 
     public void saveScreenShot(String name, WebElement we) {
@@ -87,6 +88,27 @@ public class PageBase implements Snapable {
 
     }
 
+    public boolean checkUrl(){
+        return checkUrl(urlRegEx);
+    }
+
+    public boolean checkUrlWait(int seconds){
+        return checkUrlWait(urlRegEx, seconds);
+    }
+
+    public boolean checkUrlWait(String urlPattern, int seconds){
+        new FluentWait<WebDriver>(driver)
+            .pollingEvery(250, TimeUnit.MILLISECONDS)
+            .withTimeout(seconds, TimeUnit.SECONDS)
+            .ignoring(WrongPageException.class)
+            .until((dr) -> {
+                String url = driver.getCurrentUrl();
+                logger.debug("checking URL ");
+                return (url.matches(urlPattern));
+            });
+        return true;
+    }
+
     public boolean checkTitle(String titlePattern){
         String currentTitle = driver.getTitle();
         if (!currentTitle.matches(titlePattern)){
@@ -99,10 +121,8 @@ public class PageBase implements Snapable {
         }
     }
 
-    public boolean checkUrl(){
-        return checkUrl(urlRegEx);
-    }
-
+    // In current test practices, title is checked after URL. However, it is not a design contract.
+    // For redirected page jump and slow network, a title check with fluent wait can be grown here.
     public boolean checkTitle(){
         return checkTitle(titleRegEx);
     }
@@ -113,19 +133,20 @@ public class PageBase implements Snapable {
         return this;
     }
 
-    // Refactored from RepaymentsCalTest.
     // Zoom out 10%.
-    public void zoomOut(){
+    public PageBase zoomOut(){
         driver.findElement(By.tagName("html")).sendKeys(
             Keys.chord(DriverFactory.isMacOs()? Keys.COMMAND : Keys.CONTROL, Keys.SUBTRACT)
         );
+        return this;
     }
 
     // Zoom in 10%.
-    public void zoomIn(){
+    public PageBase zoomIn(){
         driver.findElement(By.tagName("html")).sendKeys(
             Keys.chord(DriverFactory.isMacOs()? Keys.COMMAND : Keys.CONTROL, Keys.ADD)
         );
+        return this;
     }
 
     public PageBase(WebDriver dr, String urlPattern, String titlePattern){
@@ -140,7 +161,11 @@ public class PageBase implements Snapable {
         this.driverHashCode = driver.hashCode();
     }
 
-    // Use with caution on global effects. Pick up explicit wait on slow elements.
+    /**
+     * Use with caution on global effects. Pick up explicit wait on slow elements.
+     * CAUTION: Only for debug using to quickly identify if reaction time matters in issues.
+     * @param ms wait time in millis second.
+     */
     public  void setImplicitWait(long ms){
         driver.manage().timeouts().implicitlyWait(1000, TimeUnit.MILLISECONDS);
         return;

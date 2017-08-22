@@ -16,13 +16,17 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 
+/**
+ * Factory to launch web driver instances.
+ *
+ * INFO: For future migration to Selenium Grid or cloud web driver, this factory is the main
+ *       checkpoint to evaluate.
+ */
 public class DriverFactory {
     static ChromeOptions options = null;
     static Logger logger = LoggerFactory.getLogger(DriverFactory.class.getName());
@@ -31,30 +35,50 @@ public class DriverFactory {
     // Browser types in lower case.
     static List<String> BROWSER_TYPE_CHROME = Arrays.asList("chrome", "chromium");
     static List<String> BROWSER_TYPE_FIREFOX = Arrays.asList("ff", "firefox");
-    static List<String> BROWSER_TYPE_PHANTOMJS = Arrays.asList("phamtomjs");
+    static List<String> BROWSER_TYPE_PHANTOMJS = Arrays.asList("phantomjs");
     // PhantomJS is eclipsed by headless mode with FF>=v56 and Chrome>=v61.
     // Review whether it is still an option.
-
     // Default browser type.
-    static String DEF_BROWSER = BROWSER_TYPE_FIREFOX.get(0);
+    static String DEF_BROWSER = BROWSER_TYPE_CHROME.get(0);
+
+    // Environment variable key on headless mode
+    static String ENV_HEADLESS = "headless";
+    // Values to enable headless mode in lower case.
+    static List<String> HEADLESS_ENABLED = Arrays.asList("true", "1", "t");
+    public static enum Headless{
+        Disabled, Enabled;
+    }
+    // By default, disable headless mode.
+    static String DEF_HEADLESS = "0";
 
 
-
-
-    // Intend not to enable headless by default.
+    /**
+     * Process Headless Flag then call getDriver(Headless headless) to launch web driver
+     *   on specific browser type.
+     */
     public static WebDriver getDriver() {
-        return getDriver(false);
+        WebDriver dr;
+        String headless = Optional.ofNullable(System.getenv(ENV_HEADLESS)).orElse(DEF_HEADLESS);
+        logger.debug("Browser Headless Mode Flag is '" + headless + "'");
+
+        headless = headless.toLowerCase();
+        if (HEADLESS_ENABLED.contains(headless)) {
+            dr = getDriver(Headless.Enabled);
+        }else{
+            dr = getDriver(Headless.Disabled);
+        }
+        return dr;
     }
 
     // Detect browser type from environment variable to support travis-CI and Jenkins adjustment.
-    public static WebDriver getDriver(boolean headless){
+    public static WebDriver getDriver(Headless headless){
         WebDriver driver = null;
 
         // If environment is not set, just run with default browser.
-        // TODO: add headless mode for FF>=v56 and Chrome>=v61.
         String browser = Optional.ofNullable(System.getenv(ENV_BROWSER)).orElse(DEF_BROWSER);
 
-        logger.debug("Browser Option is " + browser);
+        logger.debug("Browser Type Flag is '" + browser + "'");
+        browser = browser.toLowerCase();
 
         if (BROWSER_TYPE_CHROME.contains(browser)) {
             driver = getChromeDriver(headless);
@@ -69,28 +93,39 @@ public class DriverFactory {
         throw new IllegalArgumentException("Browser type is not supported: " + browser);
     }
 
+    public static boolean isMacOs(){
+        boolean isOnMac = System.getProperty("os.name", "UNKNOWN").toLowerCase().contains("mac");
+        if (isOnMac){
+            logger.trace("\uF8FF detected");
+        }
+        return isOnMac;
+    }
+
     @NotNull
-    public static WebDriver getFirefoxDriver(boolean headless){
+    public static WebDriver getFirefoxDriver(Headless headless){
         FirefoxOptions options = new FirefoxOptions();
 
         // To enable headless mode with FF>=56 on Mac/Windows or FF>=55 on Linux,
         // config environment MOZ_HEADLESS (e.g. to "1"), or, add args "-headless" now.
         // Still waiting for the official interface in FF stable branch.
 
-        if (headless){
+        if (headless == Headless.Enabled){
             options.addArguments("-headless");
         }
+        // To disable all plugins, set safe-mode in cli.
         options.addArguments("-safe-mode");
+        options.addArguments("-height 1000 -width 1200");
 
         // Check current environment is CI or Dev. Modify binary path property for Gecko on Dev.
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("mac")) {
+        if (isMacOs()) {
             // binary
             System.setProperty("webdriver.firefox.bin", "/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox");
         }
 
         FirefoxDriverManager.getInstance().setup();
-        return new FirefoxDriver(options);
+        WebDriver wd = new FirefoxDriver(options);
+        wd.manage().window().maximize();
+        return wd;
     }
 
     static void setUpPropertiesFor32bit() {
@@ -103,7 +138,7 @@ public class DriverFactory {
     }
 
     @NotNull
-    public static WebDriver getChromeDriver(boolean headless){
+    public static WebDriver getChromeDriver(Headless headless){
         options = new ChromeOptions();
 
         // For the ist of options, refer to http://peter.sh/experiments/chromium-command-line-switches/
@@ -112,8 +147,8 @@ public class DriverFactory {
         options.addArguments("test-type");
         options.addArguments("disable-plugins");
         options.addArguments("disable-extensions");
-        options.addArguments("--loglevel 0");
         options.addArguments("ignore-urlfetcher-cert-requests");
+        options.addArguments("--incognito");
 
         String arch = System.getProperty("sun.arch.data.model");
         logger.info("Arch=" + arch);
@@ -123,11 +158,15 @@ public class DriverFactory {
             setUpPropertiesFor32bit();
         }else {
             // For 64bit platform, test with recent Chrome versions.
-            if (headless) {
+            if (headless == Headless.Enabled) {
                 options.addArguments("--headless");
             }
         }
 
+        // Most recent chrome driver release is v2.31 (for chrome v58-60) by Aug 2017.
+        // Dev env is driver v2.31 + chrome v62 on Mac.
+        // Release notes: https://chromedriver.storage.googleapis.com/2.31/notes.txt
+        // Use ChromeDriverManager.getInstance().version("$version").setup() to specify a cached version with wdm.
         ChromeDriverManager.getInstance().setup();
 
         return (null==options)? new ChromeDriver(): new ChromeDriver(options);
@@ -140,10 +179,10 @@ public class DriverFactory {
 
     public static void quitDriver(WebDriver driver){
         if ((driver != null) &&(!hasQuit(driver))){
-            logger.debug("**** Destroy Web Driver #" + driver.hashCode() +"****");
+            logger.info("*** Destroy driver #" + driver.hashCode() +" ***");
             driver.quit();
         }else{
-            logger.warn("Destroy a null or quit driver #" + (driver!=null? driver.hashCode(): "None"));
+            logger.info("*** Destroy a null or quit driver #" + (driver!=null? driver.hashCode(): "NULL") + " ***");
         }
     }
 
