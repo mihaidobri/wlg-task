@@ -15,10 +15,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.vesion>3.6.0</maven.compiler.vesion>
         <maven.jar.vesion>3.0.2</maven.jar.vesion>
-        <selenium.version>3.4.0</selenium.version>
-        <guava.version>22.0</guava.version>
+        <selenium.version>3.5.1</selenium.version>
+        <guava.version>23.0</guava.version>
         <junit.version>4.12</junit.version>
-        <wdm.version>1.6.0</wdm.version>
+        <wdm.version>1.7.1</wdm.version>
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
@@ -30,7 +30,7 @@
             <version>${selenium.version}</version>
         </dependency>
 
-        <!-- From Selenium 3.1.0, add a google lib dependence -->
+        <!-- From Selenium 3.1.0 on, add a google lib dependence -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
