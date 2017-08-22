@@ -1,7 +1,9 @@
 # Calculator Test
 
 [![Build Status](https://travis-ci.org/maxwu/wlg-task.svg?branch=dev)](https://travis-ci.org/maxwu/wlg-task)
+[![codecov](https://codecov.io/gh/maxwu/wlg-task/branch/dev/graph/badge.svg)](https://codecov.io/gh/maxwu/wlg-task)
 [![Build Status](https://travis-ci.org/maxwu/wlg-task.svg?branch=master)](https://travis-ci.org/maxwu/wlg-task)
+[![codecov](https://codecov.io/gh/maxwu/wlg-task/branch/master/graph/badge.svg)](https://codecov.io/gh/maxwu/wlg-task)
 
 Task description:
 > Choice 1: Automation Exercise on automating UI component for ANZ Repayments Calculator and Borrowing Calculator
