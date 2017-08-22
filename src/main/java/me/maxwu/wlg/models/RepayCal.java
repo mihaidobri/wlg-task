@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -163,7 +164,7 @@ public class RepayCal extends PageBase {
 
     /**
      * Hide the corresponding scenario panel from outer calculator div.
-     * @param index: Scenario id
+     * @param index Scenario id
      */
     public void removeScenario(int index){
         getScenario(index).findElement(btnRemoveCss).click();
@@ -217,10 +218,8 @@ public class RepayCal extends PageBase {
     }
 
     public void clickTooltipForScenario(int index){
-        //FIXME: For FF, change to action chain firt.
         new Actions(driver).moveToElement(getScenario(index).findElement(tooltipCss))
             .sendKeys(Keys.RETURN).build().perform();
-        // getScenario(index).findElement(tooltipCss).click();
     }
 
     public boolean isTooltipVisibleForScenario(int index){
@@ -240,7 +239,24 @@ public class RepayCal extends PageBase {
     private By scenarioLegendCss = By.cssSelector("legend.scenarioLegend");
     private By resultAmountCss = By.cssSelector("div.resultsPanel label[for='LoanAmount'] + p");
 
+    /**
+     * Get loan amount for a given scenario panel.
+     * For new added scenario, the field take a fade-in style to become accessible.
+     * A fluent wait is introduced to hold a limited try-wait on element.
+     *
+     * @param index Scenario Panel id
+     * @return The string value of loan amount on given scenario panel
+     */
     public String getResultAmountForScenario(int index){
+        new FluentWait<WebDriver>(driver)
+            .pollingEvery(250, TimeUnit.MILLISECONDS)
+            .withTimeout(5, TimeUnit.SECONDS)
+            .ignoring(NoSuchElementException.class)
+            .until((dr) -> {
+                logger.debug("checking loan amount for scenario: " + index);
+                return (getScenario(index).findElement(resultAmountCss).getText() != null);
+            });
+
         return getScenario(index).findElement(resultAmountCss).getText();
     }
 
@@ -327,18 +343,18 @@ public class RepayCal extends PageBase {
     WebElement sliderAdjustment;
 
     // 2 Scenario adding buttons when only first scenario is visible
-    @FindBy(css="span.scenario.btn.add#js-add-as-scenario")
+    @FindBy(css="span.scenario.btn.add#js-add-as-scenario i")
     @CacheLookup
     WebElement btnAddThisAsAScenario;
-    @FindBy(css="span.scenario.btn.add.createScenario#js-add-as-scenario")
+    @FindBy(css="span.scenario.btn.add.createScenario#js-add-as-scenario i")
     @CacheLookup
     WebElement btnCreateANewScenario;
 
     // 3 Scenario adding buttons when first and second scenarios are visible
-    @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-1")
+    @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-1 i")
     @CacheLookup
     WebElement btnDuplicateScenario1;
-    @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-2")
+    @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-2 i")
     @CacheLookup
     WebElement btnDuplicateScenario2;
     @FindBy(css="div#js-add-another-scenario-panel span#js-new-scenario")
@@ -350,7 +366,7 @@ public class RepayCal extends PageBase {
      * The 2nd scenario panel will be visible after the click to show a candidate calculator GUI.
      */
     public void addThisAsAScenario(){
-        btnAddThisAsAScenario.click();
+        new Actions(driver).moveToElement(btnAddThisAsAScenario).click().build().perform();
     }
 
     /**
@@ -358,6 +374,7 @@ public class RepayCal extends PageBase {
      * The 2nd scenario panel will be visible after the click to show a candidate calculator GUI.
      */
     public void createANewScenario(){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnCreateANewScenario);
         btnCreateANewScenario.click();
     }
 
@@ -365,10 +382,12 @@ public class RepayCal extends PageBase {
      * Duplicating buttons are only visible when there are two scenarios to choose.
      */
     public void duplicateScenario1(){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario1);
         btnDuplicateScenario1.click();
     }
 
     public void duplicateScenario2(){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario2);
         btnDuplicateScenario2.click();
     }
 
