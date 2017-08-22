@@ -160,6 +160,7 @@ public class DriverFactory {
             // For 64bit platform, test with recent Chrome versions.
             if (headless == Headless.Enabled) {
                 options.addArguments("--headless");
+                options.addArguments("--disable-gpu");
             }
         }
 
