@@ -11,6 +11,24 @@ Task description:
   
 > Exercise: Create some tests that execute the Repayments Calculator and Borrowing Calculator UI component in the manner it is intended.
 
+## Test Execution
+
+The test whole suite with me.maxwu.wlg package under /test folder holds 4 suite classes. To perform a full cycle, readers can refer to below command:
+
+```bash
+> mvn clean test
+```
+
+To run a specific test case, here is a sample command:
+```bash
+> -Dtest=me.maxwu.wlg.RepayCalTest#scenario0TooltipTest
+``` 
+
+Two environment variables are introduced to control browser type and headless mode. Both are case insensitive.
+ - "browser": the browser type could be "chrome" or "ff"/"firefox".
+ - "headless": "1" to enable headless mode, "0" to disable it.
+
+By default, the test is performed with Chrome in headless mode on travis and development environment.
 
 ## Work Notes
  - 20 Aug: Analysis on page structures and framework setup.
