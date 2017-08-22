@@ -219,7 +219,7 @@ public class RepayCal extends PageBase {
 
     public void clickTooltipForScenario(int index){
         new Actions(driver).moveToElement(getScenario(index).findElement(tooltipCss))
-            .sendKeys(Keys.RETURN).build().perform();
+            .click().build().perform();
     }
 
     public boolean isTooltipVisibleForScenario(int index){

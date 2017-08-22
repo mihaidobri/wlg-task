@@ -8,6 +8,7 @@ import me.maxwu.wlg.selenium.DriverFactory;
 import me.maxwu.wlg.selenium.DriverFactory.Headless;
 import org.junit.*;
 import org.junit.rules.TestRule;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,9 @@ public class RepayCalTest {
     @Test
     public void scenario0TooltipTest(){
         Assert.assertFalse(repayCalPage.isTooltipVisibleForScenario(0));
+
         repayCalPage.clickTooltipForScenario(0);
+
         Assert.assertTrue(repayCalPage.isTooltipVisibleForScenario(0));
     }
 
