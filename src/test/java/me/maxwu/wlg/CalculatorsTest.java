@@ -1,25 +1,28 @@
 /*
- * The Junit Test Suit for Mortgage Calculators Page.
- * Testing against calculator measurements are on separate calculator test suites.
+ * The JUnit Test Suite for Mortgage Calculators Entrance Page.
+ * Testing against calculators are on separate calculator test suites.
  */
-
 package me.maxwu.wlg;
 
+import me.maxwu.wlg.models.BorrowCal;
 import me.maxwu.wlg.models.Calculators;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
+import me.maxwu.wlg.selenium.DriverFactory.Headless;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.openqa.selenium.WebDriver;
 
 /**
  * Test Suite Definition for Mortgage Calculators Entrance Page.
+ * The suite includes basic hyper link check and page transition test.
  *
- * Time metrics during case development:
- * driver = DriverFactory.getFirefoxDriver(Headless.Enabled); 19.655s
- * driver = DriverFactory.getFirefoxDriver(Headless.Disabled); 19.313s
- * driver = DriverFactory.getChromeDriver(Headless.Enabled); 16.903s
- * driver = DriverFactory.getChromeDriver(Headless.Disabled); 19.255s
+ * Rough time metrics during case development:
+ * driver = DriverFactory.getFirefoxDriver(Headless.Enabled); 28.954s
+ * driver = DriverFactory.getFirefoxDriver(Headless.Disabled); 34.255s
+ * driver = DriverFactory.getChromeDriver(Headless.Enabled); 30.1s
+ * driver = DriverFactory.getChromeDriver(Headless.Disabled); 31.508s
+ * Dev environment: MBP
  */
 public class CalculatorsTest {
     private static WebDriver driver = null;
@@ -81,12 +84,17 @@ public class CalculatorsTest {
 
     @Test
     public void clickRepaymentsTest(){
-        RepayCal repayCal = calPage.getRepaymentsPage();
-        repayCal.checkUrl();
-        repayCal.checkTitle();
+        RepayCal repayPage = calPage.getRepaymentsPage();
+        repayPage.checkUrlWait(2);
+        repayPage.checkTitle();
     }
 
-    // TODO: Click and Jump to Borrowing.
+    @Test
+    public void clickBorrowingTest(){
+        BorrowCal borrowPage = calPage.getBorrowingPage();
+        borrowPage.checkUrlWait(2);
+        borrowPage.checkTitle();
+    }
 
     @AfterClass
     public static void afterClass() {
