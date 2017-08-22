@@ -2,6 +2,7 @@ package me.maxwu.wlg;
 
 import java.util.Arrays;
 import java.util.List;
+import me.maxwu.wlg.models.CalUtils;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
 import me.maxwu.wlg.selenium.DriverFactory.Headless;
@@ -77,10 +78,6 @@ public class RepayCalTest {
 
         String res = repayCalPage.getResultForScenario(index);
         logger.debug("    Result=" + res + " on scenario: " + index);
-
-        // After calculation, the result panel and scenario-legend are both visible.
-        // FIXME Assert.assertTrue(repayCalPage.isResultsPanelVisibleForScenario(index));
-        // Assert.assertTrue(repayCalPage.isScenarioLegendVisibleForScenario(index));
 
         String resLegend = repayCalPage.getResultLegendForScenario(index);
         logger.debug("    Legend=" + resLegend + " for scenario: " + index);
