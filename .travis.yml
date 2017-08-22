@@ -1,0 +1,47 @@
+language : java
+
+sudo: required
+
+dist: trusty
+
+script: mvn clean test || travis_terminate 0
+#mvn clean install
+
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 5 # give xvfb some time to start (not needed since following up command added)
+  - sudo apt-get update
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
+  - google-chrome --version
+
+jdk:
+  - oraclejdk8
+
+addons:
+  firefox: "55.0.2"
+
+cache:
+   directories:
+     - '$HOME/.m2/repository'
+
+env:
+  global:
+    - browser= "chrome"
+    - headless= "1"
+    - DBUS_SESSION_BUS_ADDRESS= "/dev/null"
+
+branches :
+   only :
+     - master
+     - dev
+
+#after_success:
+after_script:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications :
+   email :
+     - maxwunj@msn.com
