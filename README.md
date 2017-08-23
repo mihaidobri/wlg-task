@@ -27,11 +27,18 @@ This example command is to launch test with JUnit test method "scenario0TooltipT
 > mvn test-complie surefire:test -Dtest=me.maxwu.wlg.RepayCalTest#scenario0TooltipTest
 ``` 
 
+By the way, it is supported to use "*" to wildcard multiple tests.
+
+```bash
+> mvn clean test -Dtest=me.maxwu.wlg.Borrow*
+```
+
 Two environment variables are introduced to control browser type and headless mode. Both are case insensitive.
  - "browser": the browser type could be "chrome" or "ff"/"firefox".
  - "headless": "1" to enable headless mode, "0" to disable it.
 
-By default, the test is performed with Chrome in regular (not in headless) mode on travis and development environment. However, Travis config file defines global environment headless=1 to enable headless mode on cloud.
+By default, the test is performed with Chrome in regular (not in headless) mode on travis and development environment. 
+However, Travis config file defines global environment headless=1 to enable headless mode on cloud.
 For setting up local development environment, it is recommended to setup IDE config record to default Maven/JUnit test to headless mode. 
  
 
@@ -47,6 +54,10 @@ For setting up local development environment, it is recommended to setup IDE con
  - 22 Aug: Implement mock cases and fixing issues.
    - Implement borrowing calculator mock cases to test cases.
    - Fixing interaction issues with fluent wait.
+   
+ - 23 Aug: Migrate to travis with travis.yml. 
+   - Add headless chrome and mvn test launcher command to travis cfg.
+   - Add codecov metric on page object model code coverage status.
 
 ## Issues 
 1.  If conditions are changed on current scenario but it is not calculated yet.
