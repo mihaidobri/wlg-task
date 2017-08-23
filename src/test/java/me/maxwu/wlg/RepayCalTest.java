@@ -60,7 +60,10 @@ public class RepayCalTest {
     }
 
     /**
-     * Test case to calculate monthly rate on given scenario panel.
+     * Test implementation to calculate monthly rate on given scenario panel.
+     * This method is picked up by test case methods to apply as a parameterized case.
+     * For official application, interest rate shall be added to this method to take care.
+     *
      * INFO: Candidate case to parametrise for default frequency of monthly.
      * @param index Index of scenario panel
      * @param amount Loan amount.
