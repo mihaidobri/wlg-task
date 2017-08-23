@@ -16,6 +16,12 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Page Object Model for Borrowing Calculator page.
+ * Introduced at beginning of project to provide properties getters and action/action-chain
+ *     on borrowing calculator. Frequently used checkpoints as visibility, tooltip messages
+ *     are also expanded with BorrowCal class.
+ */
 public class BorrowCal extends PageBase {
     static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
     private static final String baseUrl = "https://tools.anz.co.nz/home-loans/borrowing-calculator/";
