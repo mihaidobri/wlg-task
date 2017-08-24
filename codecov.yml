@@ -21,8 +21,6 @@ coverage:
   - target/.*
   - build/.*
   - .*/resources/.*
-  - doc/.*
-  - test/.*
 
 parsers:
   gcov:
