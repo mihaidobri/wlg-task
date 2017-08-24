@@ -107,9 +107,8 @@ public class RepayCalTest {
         // The expected result for 1st scenario loan calculation.
         String expectedRate = "$2,113";
         int index = 0;
+
         monthlyCalForScenario(index, amount, length, expectedRate);
-        repayCalPage.resetCal();
-        repayCalPage.getScenariosVisibilities();
     }
 
     @Test
