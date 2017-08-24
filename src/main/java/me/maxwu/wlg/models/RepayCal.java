@@ -111,12 +111,7 @@ public class RepayCal extends PageBase {
     public static boolean isVisibleOnCalculator(WebElement we){
         return CalUtils.isVisibleOnCalculator(we);
     }
-
-    public void resetCal(){
-        new Actions(driver).moveToElement(btnReset).sendKeys(Keys.RETURN).build().perform();
-        new Actions(driver).moveToElement(btnResetConfirm).sendKeys(Keys.RETURN).build().perform();
-    }
-
+    
     // ******** Panels of scenarios and adjustment: ********
     //
     @FindBy(css="div.onescenario[id^='Scenario']")
