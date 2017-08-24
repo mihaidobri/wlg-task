@@ -3,7 +3,6 @@ package me.maxwu.wlg.models;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -30,21 +29,45 @@ public class BorrowCal extends PageBase {
 
     @FindBy(css="a.reset.js-resetButton")
     @CacheLookup
-    WebElement btnReset;
+    private WebElement btnReset;
 
     @FindBy(css="label#simpleIndividualType[for='IndividualApplication']")
     @CacheLookup
-    WebElement radioIndividual;
+    private WebElement radioIndividual;
 
     @FindBy(css="label#simpleJointType[for='JointApplication']")
     @CacheLookup
-    WebElement radioJoint;
+    private WebElement radioJoint;
 
-    By houseIncomeErrtipCss = By.cssSelector("div#js-simpleFormWrapper span.field-validation-error[data-valmsg-for='Income.AnnualHousehold']");
+    private By houseIncomeErrtipCss = By.cssSelector("div#js-simpleFormWrapper span.field-validation-error[data-valmsg-for='Income.AnnualHousehold']");
 
     @FindBy(css="div#js-simpleFormWrapper input#Income_AnnualHousehold[name='Income.AnnualHousehold']")
     @CacheLookup
-    WebElement houseIncome;
+    private WebElement houseIncome;
+
+    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='-'][data-btnplusminfor='LoanDetails_Dependants']")
+    @CacheLookup
+    private WebElement btnDecreaseChildrenNum;
+
+    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='+'][data-btnplusminfor='LoanDetails_Dependants']")
+    @CacheLookup
+    private WebElement btnIncreaseChildrenNum;
+
+    @FindBy(css="div#js-simpleFormWrapper input#LoanDetails_Dependants")
+    @CacheLookup
+    private WebElement childrenNum;
+
+    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='-'][data-btnplusminfor='LoanDetails_Vehicles']")
+    @CacheLookup
+    private WebElement btnDecreaseVehicleNum;
+
+    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='+'][data-btnplusminfor='LoanDetails_Vehicles']")
+    @CacheLookup
+    private WebElement btnIncreaseVehicleNum;
+
+    @FindBy(css="div#js-simpleFormWrapper input#LoanDetails_Vehicles")
+    @CacheLookup
+    private WebElement vehicleNum;
 
     public void clearHouseIncome(){
         houseIncome.clear();
@@ -79,18 +102,6 @@ public class BorrowCal extends PageBase {
         );
     }
 
-    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='-'][data-btnplusminfor='LoanDetails_Dependants']")
-    @CacheLookup
-    WebElement btnDecreaseChildrenNum;
-
-    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='+'][data-btnplusminfor='LoanDetails_Dependants']")
-    @CacheLookup
-    WebElement btnIncreaseChildrenNum;
-
-    @FindBy(css="div#js-simpleFormWrapper input#LoanDetails_Dependants")
-    @CacheLookup
-    WebElement childrenNum;
-
     public String getChildrenNum(){
         return childrenNum.getAttribute("value");
     }
@@ -107,18 +118,6 @@ public class BorrowCal extends PageBase {
     public void minusChildrenNum(){
         btnDecreaseChildrenNum.click();
     }
-
-    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='-'][data-btnplusminfor='LoanDetails_Vehicles']")
-    @CacheLookup
-    WebElement btnDecreaseVehicleNum;
-
-    @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='+'][data-btnplusminfor='LoanDetails_Vehicles']")
-    @CacheLookup
-    WebElement btnIncreaseVehicleNum;
-
-    @FindBy(css="div#js-simpleFormWrapper input#LoanDetails_Vehicles")
-    @CacheLookup
-    WebElement vehicleNum;
 
     public String getVehicleNum(){
         return vehicleNum.getAttribute("value");
@@ -138,14 +137,14 @@ public class BorrowCal extends PageBase {
     }
 
     @FindBy(css="div#js-simpleFormWrapper input[type='button'][value='Calculate']")
-    WebElement btnCalculate;
+    private WebElement btnCalculate;
 
     public void calculate(){
         btnCalculate.sendKeys(Keys.RETURN);
     }
 
     @FindBy(css="div.calculatedResults p#amountAbleToBorrow")
-    WebElement amountAbleToBorrow;
+    private WebElement amountAbleToBorrow;
 
     /**
      * As the major calculation density task to get result with given conditions,

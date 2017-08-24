@@ -28,23 +28,23 @@ import java.util.Optional;
  *       checkpoint to evaluate.
  */
 public class DriverFactory {
-    static ChromeOptions options = null;
-    static Logger logger = LoggerFactory.getLogger(DriverFactory.class.getName());
+    private static ChromeOptions options = null;
+    private static Logger logger = LoggerFactory.getLogger(DriverFactory.class.getName());
     // Environment variable key for browser type.
-    static String ENV_BROWSER = "browser";
+    private static String ENV_BROWSER = "browser";
     // Browser types in lower case.
-    static List<String> BROWSER_TYPE_CHROME = Arrays.asList("chrome", "chromium");
-    static List<String> BROWSER_TYPE_FIREFOX = Arrays.asList("ff", "firefox");
-    static List<String> BROWSER_TYPE_PHANTOMJS = Arrays.asList("phantomjs");
+    private static List<String> BROWSER_TYPE_CHROME = Arrays.asList("chrome", "chromium");
+    private static List<String> BROWSER_TYPE_FIREFOX = Arrays.asList("ff", "firefox");
+    private static List<String> BROWSER_TYPE_PHANTOMJS = Arrays.asList("phantomjs");
     // PhantomJS is eclipsed by headless mode with FF>=v56 and Chrome>=v61.
     // Review whether it is still an option.
     // Default browser type.
-    static String DEF_BROWSER = BROWSER_TYPE_CHROME.get(0);
+    private static String DEF_BROWSER = BROWSER_TYPE_CHROME.get(0);
 
     // Environment variable key on headless mode
-    static String ENV_HEADLESS = "headless";
+    private static String ENV_HEADLESS = "headless";
     // Values to enable headless mode in lower case.
-    static List<String> HEADLESS_ENABLED = Arrays.asList("true", "1", "t");
+    private static List<String> HEADLESS_ENABLED = Arrays.asList("true", "1", "t");
     public static enum Headless{
         Disabled, Enabled;
     }

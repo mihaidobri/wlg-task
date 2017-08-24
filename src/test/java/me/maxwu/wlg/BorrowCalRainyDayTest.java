@@ -14,6 +14,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test Suite as Borrowing Calculator Rainy Day Sample.
@@ -22,6 +24,7 @@ import org.openqa.selenium.WebDriver;
  *       Result accessibility/visibility are not included so far.
  */
 public class BorrowCalRainyDayTest {
+    private static Logger logger = LoggerFactory.getLogger(BorrowCalRainyDayTest.class.getName());
     private static WebDriver driver = null;
     private static BorrowCal borrowPage = null;
 

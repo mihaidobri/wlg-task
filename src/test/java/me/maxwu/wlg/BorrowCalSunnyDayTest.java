@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class BorrowCalSunnyDayTest {
-    static Logger logger = LoggerFactory.getLogger(BorrowCalSunnyDayTest.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(BorrowCalSunnyDayTest.class.getName());
     private static WebDriver driver = null;
     private static BorrowCal borrowPage = null;
 

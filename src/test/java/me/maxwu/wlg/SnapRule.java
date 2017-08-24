@@ -13,9 +13,9 @@ import java.io.IOException;
  * JUnit Rule to take screenshot on failure.
  */
 public class SnapRule implements MethodRule {
-    Logger logger = LoggerFactory.getLogger(SnapRule.class.getName());
+    private Logger logger = LoggerFactory.getLogger(SnapRule.class.getName());
 
-    ISnapable pageSnaper;
+    private ISnapable pageSnaper;
 
     public void setSnapable(ISnapable pageSnaper) {
         this.pageSnaper = pageSnaper;

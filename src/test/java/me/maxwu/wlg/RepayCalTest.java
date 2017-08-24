@@ -2,13 +2,11 @@ package me.maxwu.wlg;
 
 import java.util.Arrays;
 import java.util.List;
-import me.maxwu.wlg.models.CalUtils;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
 import me.maxwu.wlg.selenium.DriverFactory.Headless;
 import org.junit.*;
 import org.junit.rules.TestRule;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *     with current sample baseline.
  */
 public class RepayCalTest {
-    static Logger logger = LoggerFactory.getLogger(RepayCalTest.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RepayCalTest.class.getName());
     private static WebDriver driver = null;
     private static RepayCal repayCalPage = null;
     private static int SCENARIO_NUM = 3;

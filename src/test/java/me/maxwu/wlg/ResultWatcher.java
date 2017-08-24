@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * INFO: Actions could be hooked in this class for statistics works.
  */
 class ResultWatcher extends TestWatcher {
-    static Logger logger = LoggerFactory.getLogger(ResultWatcher.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(ResultWatcher.class.getName());
 
     @Override
     public void failed(Throwable e, Description description) {

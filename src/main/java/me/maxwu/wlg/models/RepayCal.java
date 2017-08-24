@@ -88,7 +88,7 @@ import org.slf4j.LoggerFactory;
  *     Sample rainy day test is introduced on Borrowing Calculator.
  */
 public class RepayCal extends PageBase {
-    static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
     private static final String baseUrl = "https://tools.anz.co.nz/home-loans/repayments-calculator/";
     static private String urlRegEx = "^https://tools.anz.co.nz/home-loans/repayments-calculator/?$";
     static private String titleRegEx = "^\\s*Repayments Calculator \\| What will my home loan repayments be\\? \\| ANZ Store\\s*$";
@@ -130,7 +130,7 @@ public class RepayCal extends PageBase {
     }
 
     @FindBy(css="div#js-adjustRepayment")
-    List<WebElement> adjustRepayment;
+    private List<WebElement> adjustRepayment;
 
     // ******** Elements in scenario panel: ********
     //
@@ -337,29 +337,29 @@ public class RepayCal extends PageBase {
     // ******** Elements in adjustment panel: ********
     //
     @FindBy(css="input[name='repaymentAdjustment']")
-    WebElement inputAdjustment;
+    private WebElement inputAdjustment;
 
     @FindBy(css="div#js-repaymentSlider div")
-    WebElement sliderAdjustment;
+    private WebElement sliderAdjustment;
 
     // 2 Scenario adding buttons when only first scenario is visible
     @FindBy(css="span.scenario.btn.add#js-add-as-scenario i")
     @CacheLookup
-    WebElement btnAddThisAsAScenario;
+    private WebElement btnAddThisAsAScenario;
     @FindBy(css="span.scenario.btn.add.createScenario#js-add-as-scenario i")
     @CacheLookup
-    WebElement btnCreateANewScenario;
+    private WebElement btnCreateANewScenario;
 
     // 3 Scenario adding buttons when first and second scenarios are visible
     @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-1 i")
     @CacheLookup
-    WebElement btnDuplicateScenario1;
+    private WebElement btnDuplicateScenario1;
     @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-2 i")
     @CacheLookup
-    WebElement btnDuplicateScenario2;
+    private WebElement btnDuplicateScenario2;
     @FindBy(css="div#js-add-another-scenario-panel span#js-new-scenario")
     @CacheLookup
-    WebElement btnAddABlankScenario;
+    private WebElement btnAddABlankScenario;
 
     /**
      * Click the button on adjustment panel when only 1st scenario is visible.

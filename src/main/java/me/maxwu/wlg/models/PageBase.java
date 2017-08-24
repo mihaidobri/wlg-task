@@ -28,7 +28,7 @@ import java.io.File;
  * INFO: Fluent wait is only on URL check for now with PageBase sample implementation.
  */
 public class PageBase implements ISnapable {
-    WebDriver driver = null;
+    protected WebDriver driver = null;
     private static Logger logger = LoggerFactory.getLogger(PageBase.class.getName());
     private int driverHashCode;
     // By default, check URL against HTTPs only.
