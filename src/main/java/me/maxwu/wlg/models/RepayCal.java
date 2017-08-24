@@ -88,7 +88,7 @@ import org.slf4j.LoggerFactory;
  *     Sample rainy day test is introduced on Borrowing Calculator.
  */
 public class RepayCal extends PageBase {
-    static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
     private static final String baseUrl = "https://tools.anz.co.nz/home-loans/repayments-calculator/";
     static private String urlRegEx = "^https://tools.anz.co.nz/home-loans/repayments-calculator/?$";
     static private String titleRegEx = "^\\s*Repayments Calculator \\| What will my home loan repayments be\\? \\| ANZ Store\\s*$";
@@ -98,6 +98,7 @@ public class RepayCal extends PageBase {
     private WebElement outerCalPanel;
 
     @FindBy(css="i.icon-reset")
+    @CacheLookup
     private WebElement btnReset;
 
     @FindBy(css="button.resetButton")
@@ -109,6 +110,11 @@ public class RepayCal extends PageBase {
     // The original static method was refactored to CalUtils class.
     public static boolean isVisibleOnCalculator(WebElement we){
         return CalUtils.isVisibleOnCalculator(we);
+    }
+
+    public void resetCal(){
+        new Actions(driver).moveToElement(btnReset).sendKeys(Keys.RETURN).build().perform();
+        new Actions(driver).moveToElement(btnResetConfirm).sendKeys(Keys.RETURN).build().perform();
     }
 
     // ******** Panels of scenarios and adjustment: ********
@@ -130,7 +136,7 @@ public class RepayCal extends PageBase {
     }
 
     @FindBy(css="div#js-adjustRepayment")
-    List<WebElement> adjustRepayment;
+    private List<WebElement> adjustRepayment;
 
     // ******** Elements in scenario panel: ********
     //
@@ -198,7 +204,7 @@ public class RepayCal extends PageBase {
         getInterestRateElementForScenario(index).sendKeys(interestRate);
     }
 
-    public void setLoadAmountForScenario(int index, String txtAmount){
+    public void setLoanAmountForScenario(int index, String txtAmount){
         WebElement inputAmount = getScenario(index).findElement(loanAmountCss);
         logger.debug("Current amount of scenario " + index + " = '" + inputAmount.getText() +"'");
         inputAmount.clear();
@@ -206,6 +212,10 @@ public class RepayCal extends PageBase {
         // Introduce action chain to adapt FF v62 + Gecko v0.18.
         // Original straight way: inputAmount.sendKeys(txtAmount);
         new Actions(driver).moveToElement(inputAmount).sendKeys(txtAmount).build().perform();
+    }
+
+    public String getLoanAmountForScenario(int index){
+        return getScenario(index).findElement(loanAmountCss).getText();
     }
 
     public boolean isResultsPanelVisibleForScenario(int index){
@@ -337,29 +347,29 @@ public class RepayCal extends PageBase {
     // ******** Elements in adjustment panel: ********
     //
     @FindBy(css="input[name='repaymentAdjustment']")
-    WebElement inputAdjustment;
+    private WebElement inputAdjustment;
 
     @FindBy(css="div#js-repaymentSlider div")
-    WebElement sliderAdjustment;
+    private WebElement sliderAdjustment;
 
     // 2 Scenario adding buttons when only first scenario is visible
     @FindBy(css="span.scenario.btn.add#js-add-as-scenario i")
     @CacheLookup
-    WebElement btnAddThisAsAScenario;
+    private WebElement btnAddThisAsAScenario;
     @FindBy(css="span.scenario.btn.add.createScenario#js-add-as-scenario i")
     @CacheLookup
-    WebElement btnCreateANewScenario;
+    private WebElement btnCreateANewScenario;
 
     // 3 Scenario adding buttons when first and second scenarios are visible
     @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-1 i")
     @CacheLookup
-    WebElement btnDuplicateScenario1;
+    private WebElement btnDuplicateScenario1;
     @FindBy(css="div#js-add-another-scenario-panel span#js-duplicate-scenario-2 i")
     @CacheLookup
-    WebElement btnDuplicateScenario2;
+    private WebElement btnDuplicateScenario2;
     @FindBy(css="div#js-add-another-scenario-panel span#js-new-scenario")
     @CacheLookup
-    WebElement btnAddABlankScenario;
+    private WebElement btnAddABlankScenario;
 
     /**
      * Click the button on adjustment panel when only 1st scenario is visible.

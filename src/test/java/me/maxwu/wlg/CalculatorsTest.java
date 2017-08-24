@@ -12,6 +12,8 @@ import me.maxwu.wlg.selenium.DriverFactory.Headless;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test Suite Definition for Mortgage Calculators Entrance Page.
@@ -25,6 +27,7 @@ import org.openqa.selenium.WebDriver;
  * Dev environment: MBP
  */
 public class CalculatorsTest {
+    private static Logger logger = LoggerFactory.getLogger(CalculatorsTest.class.getName());
     private static WebDriver driver = null;
     private static Calculators calPage = null;
     private static String[] expectedTexts = {

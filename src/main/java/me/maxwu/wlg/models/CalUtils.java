@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * This class holds general and static utilities for calculator testing.
  */
 public class CalUtils {
-    static Logger logger = LoggerFactory.getLogger(CalUtils.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(CalUtils.class.getName());
 
     // Whether the element is visible within calculators.
     public static boolean isVisibleOnCalculator(WebElement we){

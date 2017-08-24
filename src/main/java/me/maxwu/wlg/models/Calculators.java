@@ -27,32 +27,32 @@ import java.util.stream.Collectors;
  *       It is not in current test scope. Only a hyperlink text check introduced.
  */
 public class Calculators extends PageBase {
-    static Logger logger = LoggerFactory.getLogger(Calculators.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(Calculators.class.getName());
     private static final String baseUrl = "https://www.anz.co.nz/personal/home-loans-mortgages/mortgage-calculators/";
     static private String urlRegEx = "^https://www.anz.co.nz/personal/home-loans-mortgages/mortgage-calculators[/]$";
     static private String titleRegEx = "^\\s*Mortgage calculators \\| ANZ\\s*$";
 
     @FindBy(css="#leftnav a[href='/personal/home-loans-mortgages/mortgage-calculators/']")
     @CacheLookup
-    WebElement aMortgageCals;
+    private WebElement aMortgageCals;
 
     // First row under calculators link holds the repayments calculator
     @FindBy(css="#leftnav a[href='/personal/home-loans-mortgages/mortgage-calculators/'] + ul > li:nth-child(1) > a:nth-child(2)")
     @CacheLookup
-    WebElement aRepaymentsCal;
+    private WebElement aRepaymentsCal;
 
     // Second row under calculators link holds the borrowing calculator
     @FindBy(css="#leftnav a[href='/personal/home-loans-mortgages/mortgage-calculators/'] + ul > li:nth-child(2) > a:nth-child(2)")
     @CacheLookup
-    WebElement aBorrowingCal;
+    private WebElement aBorrowingCal;
 
     @FindBy(css="#leftnav a[href='/personal/home-loans-mortgages/mortgage-calculators/'] +ul a + a")
     @CacheLookup
-    List<WebElement> aTagsUnderMortgageCals;
+    private List<WebElement> aTagsUnderMortgageCals;
 
     @FindBy(css="div#contentWrapper div#contentstart + h1")
     @CacheLookup
-    WebElement h1Mortgage;
+    private WebElement h1Mortgage;
 
     public String getMortgageCalsText(){
         return aMortgageCals.getText();
