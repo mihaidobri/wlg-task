@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
-import me.maxwu.wlg.selenium.DriverFactory.Headless;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.openqa.selenium.WebDriver;
@@ -75,7 +74,7 @@ public class RepayCalTest {
         Assert.assertFalse(repayCalPage.isScenarioLegendVisibleForScenario(index));
         logger.debug("    Scenario Legend Visibility: False");
 
-        repayCalPage.setLoadAmountForScenario(index, Integer.toString(amount));
+        repayCalPage.setLoanAmountForScenario(index, Integer.toString(amount));
         logger.debug("set loan amount to:" + Integer.toString(amount));
         repayCalPage.setLoanLengthForScenarioByValue(index, length);
         // Map the length select value to option texts.
@@ -103,12 +102,14 @@ public class RepayCalTest {
 
     @Test
     public void scenario0MonthlySmokeTest() {
-        int amount = 10000;
-        String length = "30";
+        int amount = 300000;
+        String length = "20";
         // The expected result for 1st scenario loan calculation.
-        String expectedRate = "$59";
+        String expectedRate = "$2,113";
         int index = 0;
         monthlyCalForScenario(index, amount, length, expectedRate);
+        repayCalPage.resetCal();
+        repayCalPage.getScenariosVisibilities();
     }
 
     @Test

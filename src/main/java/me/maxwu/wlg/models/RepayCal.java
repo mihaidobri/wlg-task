@@ -98,6 +98,7 @@ public class RepayCal extends PageBase {
     private WebElement outerCalPanel;
 
     @FindBy(css="i.icon-reset")
+    @CacheLookup
     private WebElement btnReset;
 
     @FindBy(css="button.resetButton")
@@ -109,6 +110,11 @@ public class RepayCal extends PageBase {
     // The original static method was refactored to CalUtils class.
     public static boolean isVisibleOnCalculator(WebElement we){
         return CalUtils.isVisibleOnCalculator(we);
+    }
+
+    public void resetCal(){
+        new Actions(driver).moveToElement(btnReset).sendKeys(Keys.RETURN).build().perform();
+        new Actions(driver).moveToElement(btnResetConfirm).sendKeys(Keys.RETURN).build().perform();
     }
 
     // ******** Panels of scenarios and adjustment: ********
@@ -198,7 +204,7 @@ public class RepayCal extends PageBase {
         getInterestRateElementForScenario(index).sendKeys(interestRate);
     }
 
-    public void setLoadAmountForScenario(int index, String txtAmount){
+    public void setLoanAmountForScenario(int index, String txtAmount){
         WebElement inputAmount = getScenario(index).findElement(loanAmountCss);
         logger.debug("Current amount of scenario " + index + " = '" + inputAmount.getText() +"'");
         inputAmount.clear();
@@ -206,6 +212,10 @@ public class RepayCal extends PageBase {
         // Introduce action chain to adapt FF v62 + Gecko v0.18.
         // Original straight way: inputAmount.sendKeys(txtAmount);
         new Actions(driver).moveToElement(inputAmount).sendKeys(txtAmount).build().perform();
+    }
+
+    public String getLoanAmountForScenario(int index){
+        return getScenario(index).findElement(loanAmountCss).getText();
     }
 
     public boolean isResultsPanelVisibleForScenario(int index){
