@@ -1,5 +1,7 @@
 # Calculator Test
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)]()
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d86c36e4af39477284f8c4c93bbe19ea)](https://www.codacy.com/app/maxwu/wlg-task?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=maxwu/wlg-task&amp;utm_campaign=Badge_Grade) <br>
 [![Build Status](https://travis-ci.org/maxwu/wlg-task.svg?branch=dev)](https://travis-ci.org/maxwu/wlg-task)
 [![codecov](https://codecov.io/gh/maxwu/wlg-task/branch/dev/graph/badge.svg)](https://codecov.io/gh/maxwu/wlg-task)
 [![Build Status](https://travis-ci.org/maxwu/wlg-task.svg?branch=master)](https://travis-ci.org/maxwu/wlg-task)
