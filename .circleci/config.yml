@@ -16,6 +16,11 @@ jobs:
           browser: chrome
           headless: 1
 
+    branches:
+      only:
+        - master
+        - dev
+
     working_directory: ~/repo
 
     environment:
