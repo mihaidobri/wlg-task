@@ -90,7 +90,7 @@ public class RepayCalTest {
         Assert.assertEquals(res, resLegend);
         Assert.assertEquals(expectedRate, res);
 
-        logger.debug("    Loan Amount=" + repayCalPage.getResultAmountForScenario(index));
+        logger.debug("    Result Amount=" + repayCalPage.getResultAmountForScenario(index));
 
         List<String> totalInterests = repayCalPage.getTotalInterestForScenario(index);
         // Only one interest number is visible.
@@ -109,6 +109,21 @@ public class RepayCalTest {
         int index = 0;
 
         monthlyCalForScenario(index, amount, length, expectedRate);
+    }
+
+    @Test
+    public void resetNewCalSanityTest() {
+        // Reset on a fresh new Repayments Calculator still shows a new empty calculator.
+        repayCalPage.resetCal();
+        // Fresh new page only shows scenario-0
+        Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
+    }
+
+    @Test
+    public void resetScenario0SmokeTest() {
+        monthlyCalForScenario(0, 10000, "30", "$59");
+        repayCalPage.resetCal();
+        Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
     }
 
     @Test

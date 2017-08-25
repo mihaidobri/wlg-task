@@ -78,11 +78,13 @@ public class Calculators extends PageBase {
     }
 
     public RepayCal getRepaymentsPage(){
+        logger.debug("Hitting Repayments A-tag link to transition to Repayments Page.");
         aRepaymentsCal.sendKeys(Keys.RETURN);
         return new RepayCal(driver);
     }
 
     public BorrowCal getBorrowingPage(){
+        logger.debug("Hitting Borrowing A-tag link to transition to Borrowing Page.");
         aBorrowingCal.sendKeys(Keys.RETURN);
         return new BorrowCal(driver);
     }
@@ -90,6 +92,7 @@ public class Calculators extends PageBase {
     public Calculators(WebDriver driver){
         super(driver, urlRegEx, titleRegEx);
         PageFactory.initElements(driver, this);
+        logger.debug("Calculator page model initialized.");
     }
 
     public Calculators get(){

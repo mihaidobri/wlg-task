@@ -4,15 +4,11 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +45,7 @@ public class DriverFactory {
         Disabled, Enabled;
     }
     // By default, disable headless mode.
-    static String DEF_HEADLESS = "0";
+    private static String DEF_HEADLESS = "0";
 
 
     /**
@@ -128,7 +124,7 @@ public class DriverFactory {
         return wd;
     }
 
-    static void setUpPropertiesFor32bit() {
+    private static void setUpPropertiesFor32bit() {
         logger.info("setup 32bit chromium options..");
         // Take Chromium-browser instead of google-chrome since 32bit chrome is EOS.
         System.setProperty("wdm.override", "true");
