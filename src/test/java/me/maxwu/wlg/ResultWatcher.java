@@ -31,4 +31,9 @@ class ResultWatcher extends TestWatcher {
         logger.info(ColorStr.blue("♫ ☞ Case " + description.getMethodName() + " starts"));
     }
 
+    @Override
+    protected void finished(Description description) {
+        logger.info(ColorStr.blue("Suite " + description.getClassName() + " completes"));
+    }
+
 }

@@ -2,6 +2,7 @@ package me.maxwu.wlg;
 
 import java.util.Arrays;
 import java.util.List;
+import me.maxwu.wlg.models.CalUtils;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
 import org.junit.*;
@@ -90,7 +91,7 @@ public class RepayCalTest {
         Assert.assertEquals(res, resLegend);
         Assert.assertEquals(expectedRate, res);
 
-        logger.debug("    Loan Amount=" + repayCalPage.getResultAmountForScenario(index));
+        logger.debug("    Result Amount=" + repayCalPage.getResultAmountForScenario(index));
 
         List<String> totalInterests = repayCalPage.getTotalInterestForScenario(index);
         // Only one interest number is visible.
@@ -110,6 +111,39 @@ public class RepayCalTest {
 
         monthlyCalForScenario(index, amount, length, expectedRate);
     }
+
+    @Test
+    public void resetNewCalSanityTest() {
+        // Reset on a fresh new Repayments Calculator still shows a new empty calculator.
+        repayCalPage.resetAndConfirm();
+        // Fresh new page only shows scenario-0
+        Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
+    }
+
+    @Test
+    public void resetAndConfirmScenario0Test() {
+        int amount = 10000;
+        String length = "30";
+        String expectedRate = "$59";
+        int index = 0;
+
+        monthlyCalForScenario(index, amount, length, expectedRate);
+        repayCalPage.resetAndConfirm();
+        Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
+    }
+
+    @Test
+    public void resetAndCancelScenario0Test() {
+        int amount = 300000;
+        String length = "20";
+        String expectedRate = "$2,113";
+        int index = 0;
+
+        monthlyCalForScenario(index, amount, length, expectedRate);
+        repayCalPage.resetAndCancel();
+        Assert.assertEquals(CalUtils.formatNumber(amount), repayCalPage.getLoanAmountForScenario(0));
+    }
+
 
     @Test
     public void scenarioVisibilitiesAddThisAndHideTest() {

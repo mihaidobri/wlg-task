@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *     are also expanded with BorrowCal class.
  */
 public class BorrowCal extends PageBase {
-    static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
     private static final String baseUrl = "https://tools.anz.co.nz/home-loans/borrowing-calculator/";
     static private String urlRegEx = "^https://tools.anz.co.nz/home-loans/borrowing-calculator/?$";
     static private String titleRegEx = "^\\s*Borrowing Calculator\\s+\\|\\s+How much can I borrow\\?\\s+\\|\\s+ANZ Store\\s*$";

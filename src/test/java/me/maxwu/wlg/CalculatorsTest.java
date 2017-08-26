@@ -4,6 +4,7 @@
  */
 package me.maxwu.wlg;
 
+import java.util.Arrays;
 import me.maxwu.wlg.models.BorrowCal;
 import me.maxwu.wlg.models.Calculators;
 import me.maxwu.wlg.models.RepayCal;
@@ -90,6 +91,7 @@ public class CalculatorsTest {
         RepayCal repayPage = calPage.getRepaymentsPage();
         repayPage.checkUrlWait(2);
         repayPage.checkTitle();
+        Assert.assertEquals(Arrays.asList(true, false, false), repayPage.getScenariosVisibilities());
     }
 
     @Test

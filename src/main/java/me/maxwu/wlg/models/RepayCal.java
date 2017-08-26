@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -90,8 +91,10 @@ import org.slf4j.LoggerFactory;
 public class RepayCal extends PageBase {
     private static Logger logger = LoggerFactory.getLogger(RepayCal.class.getName());
     private static final String baseUrl = "https://tools.anz.co.nz/home-loans/repayments-calculator/";
-    static private String urlRegEx = "^https://tools.anz.co.nz/home-loans/repayments-calculator/?$";
-    static private String titleRegEx = "^\\s*Repayments Calculator \\| What will my home loan repayments be\\? \\| ANZ Store\\s*$";
+    private static String urlRegEx = "^https://tools.anz.co.nz/home-loans/repayments-calculator/?$";
+    private static String titleRegEx = "^\\s*Repayments Calculator \\| What will my home loan repayments be\\? \\| ANZ Store\\s*$";
+    private static int pollingIntervalMillis = 250;
+    private static int pollingTimeOutSecond = 5;
 
     //******** Calculator Outer Panel: ********
     @FindBy(css="div#RepaymentCalculatorOuter")
@@ -112,18 +115,29 @@ public class RepayCal extends PageBase {
         return CalUtils.isVisibleOnCalculator(we);
     }
 
-    public void resetCal(){
-        new Actions(driver).moveToElement(btnReset).sendKeys(Keys.RETURN).build().perform();
-        new Actions(driver).moveToElement(btnResetConfirm).sendKeys(Keys.RETURN).build().perform();
+    public void resetAndConfirm(){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnReset);
+        btnReset.click();
+        btnResetConfirm.click();
+    }
+
+    public void resetAndCancel(){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnReset);
+        btnReset.click();
+        btnResetCancel.click();
     }
 
     // ******** Panels of scenarios and adjustment: ********
     //
-    @FindBy(css="div.onescenario[id^='Scenario']")
-    @CacheLookup
-    private List<WebElement> scenarios;
+    @FindBy(css="div#js-adjustRepayment")
+    private List<WebElement> adjustRepayment;
+
+    private By scenariosCss = By.cssSelector("div[id^='Scenario']");
 
     public List<WebElement> getScenarios() {
+        List<WebElement> scenarios;
+        scenarios =  driver.findElements(scenariosCss);
+        logger.trace("Scenario panel number=" + scenarios.size());
         return scenarios;
     }
 
@@ -134,9 +148,6 @@ public class RepayCal extends PageBase {
     public List<Boolean> getScenariosVisibilities(){
         return getScenarios().stream().map(RepayCal::isVisibleOnCalculator).collect(Collectors.toList());
     }
-
-    @FindBy(css="div#js-adjustRepayment")
-    private List<WebElement> adjustRepayment;
 
     // ******** Elements in scenario panel: ********
     //
@@ -215,7 +226,18 @@ public class RepayCal extends PageBase {
     }
 
     public String getLoanAmountForScenario(int index){
-        return getScenario(index).findElement(loanAmountCss).getText();
+        WebElement scenario = getScenario(index);
+        WebElement inputLoanAmount = new FluentWait<>(driver)
+            .pollingEvery(pollingIntervalMillis, TimeUnit.MILLISECONDS)
+            .withTimeout(pollingTimeOutSecond, TimeUnit.SECONDS)
+            .ignoring(NoSuchElementException.class)
+            .ignoring(StaleElementReferenceException.class)
+            .until((driver) -> {
+                logger.debug("checking loan amount input for scenario: " + index);
+                return (scenario.findElement(loanAmountCss));
+            });
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", inputLoanAmount);
+        return inputLoanAmount.getAttribute("value");
     }
 
     public boolean isResultsPanelVisibleForScenario(int index){
@@ -258,16 +280,14 @@ public class RepayCal extends PageBase {
      * @return The string value of loan amount on given scenario panel
      */
     public String getResultAmountForScenario(int index){
-        new FluentWait<WebDriver>(driver)
-            .pollingEvery(250, TimeUnit.MILLISECONDS)
-            .withTimeout(5, TimeUnit.SECONDS)
+        return new FluentWait<>(driver)
+            .pollingEvery(pollingTimeOutSecond, TimeUnit.MILLISECONDS)
+            .withTimeout(pollingTimeOutSecond, TimeUnit.SECONDS)
             .ignoring(NoSuchElementException.class)
-            .until((dr) -> {
-                logger.debug("checking loan amount for scenario: " + index);
-                return (getScenario(index).findElement(resultAmountCss).getText() != null);
+            .until((x) -> {
+                logger.debug("checking result loan amount for scenario: " + index);
+                return getScenario(index).findElement(resultAmountCss).getText();
             });
-
-        return getScenario(index).findElement(resultAmountCss).getText();
     }
 
     // Interests amounts are calculated in monthly, fortnightly and weekly by design.
@@ -276,6 +296,7 @@ public class RepayCal extends PageBase {
     private By resultTotalInterestItems = By.cssSelector(
         "label[for='ScenarioDatas_monthly__TotalInterest'] ~ p"
     );
+
     private By resultTotalCostItems = By.cssSelector(
         "label[for='ScenarioDatas_monthly__TotalCost'] ~ p"
     );
@@ -317,7 +338,8 @@ public class RepayCal extends PageBase {
     /**
      * As the computation density task to get result on given scenario panel,
      *     current method getResultForScenario() has carried a fluent wait up to 5s
-     *     and 250ms check interval to adapt slow reacting situations.
+     *     and 250ms (as defined in pollingIntervalMillis and pollingTimeOutSecond )
+     *     check interval to adapt slow reacting situations.
      *     However, it is recommended to figure out performance criteria with BA
      *     or through test statistics over public network (e.g. 3 sigma tolerance
      *     from middle response time on cloud based testing).
@@ -327,8 +349,8 @@ public class RepayCal extends PageBase {
      */
     public String getResultForScenario(int index){
         new FluentWait<WebDriver>(driver)
-            .pollingEvery(250, TimeUnit.MILLISECONDS)
-            .withTimeout(5, TimeUnit.SECONDS)
+            .pollingEvery(pollingIntervalMillis, TimeUnit.MILLISECONDS)
+            .withTimeout(pollingTimeOutSecond, TimeUnit.SECONDS)
             .ignoring(NoSuchElementException.class)
             .until((dr) -> {
                 logger.debug("checking results visibilities for scenario: " + index);
@@ -377,6 +399,7 @@ public class RepayCal extends PageBase {
      */
     public void addThisAsAScenario(){
         new Actions(driver).moveToElement(btnAddThisAsAScenario).click().build().perform();
+        logger.trace("Action: Add This As Scenario");
     }
 
     /**
@@ -386,6 +409,7 @@ public class RepayCal extends PageBase {
     public void createANewScenario(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnCreateANewScenario);
         btnCreateANewScenario.click();
+        logger.trace("Action: Create A New Scenario");
     }
 
     /**
@@ -394,11 +418,13 @@ public class RepayCal extends PageBase {
     public void duplicateScenario1(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario1);
         btnDuplicateScenario1.click();
+        logger.trace("Action: Duplicate Scenario 1");
     }
 
     public void duplicateScenario2(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario2);
         btnDuplicateScenario2.click();
+        logger.trace("Action: Duplicate Scenario 2");
     }
 
     //******* General Test Supports: ********
