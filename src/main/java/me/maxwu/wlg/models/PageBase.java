@@ -168,7 +168,6 @@ public class PageBase implements ISnapable {
      */
     public  void setImplicitWait(long ms){
         driver.manage().timeouts().implicitlyWait(1000, TimeUnit.MILLISECONDS);
-        return;
     }
 
     public void quit(){
