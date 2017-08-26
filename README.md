@@ -60,7 +60,21 @@ Surefire HTML format report is in $mvn_root/target/site folder by default.
 
 Code coverage report is located at $mvn_root/target/site/jacoco. 
 
-### Project Descriptions
+### Cloud Testing
+
+As an open source project, the cloud based tests are running with Travis CI and Circle CI. 
+For branch 'dev', the CI status is available 7x24 through badges:
+[![TravisCI Status](https://travis-ci.org/maxwu/wlg-task.svg?branch=dev)](https://travis-ci.org/maxwu/wlg-task)
+[![CircleCI Status](https://circleci.com/gh/maxwu/wlg-task/tree/dev.svg?style=shield)](https://circleci.com/gh/maxwu/wlg-task/tree/dev). 
+Circle CI test is configured with docker image on CircleCI 2.0 platform.
+
+Static code ranking and issue summary are monitored with Codacy.com through badge  
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d86c36e4af39477284f8c4c93bbe19ea)](https://www.codacy.com/app/maxwu/wlg-task?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=maxwu/wlg-task&amp;utm_campaign=Badge_Grade). 
+Usually the static ranking is given with score in letter A, B, or even worse result C. Score B and C indicates improvement works to solve the static check issues based on POM and other patterns.
+
+CI Code Coverage is calculated with Maven Jacoco plugin and post processing steps with CodeCov. The 7x24 status is available from badge [![codecov](https://codecov.io/gh/maxwu/wlg-task/branch/dev/graph/badge.svg)](https://codecov.io/gh/maxwu/wlg-task) <br>.
+
+## Project Descriptions
 
 The Calculator Project is a sample of web automation solution as a Maven managed Java project with Java 8.
 HTML format report could be triggered by `mvn surefire-report:report`.
