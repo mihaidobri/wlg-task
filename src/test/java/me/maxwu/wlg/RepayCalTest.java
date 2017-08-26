@@ -1,9 +1,8 @@
 package me.maxwu.wlg;
 
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
+import me.maxwu.wlg.models.CalUtils;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
 import org.junit.*;
@@ -123,17 +122,26 @@ public class RepayCalTest {
 
     @Test
     public void resetAndConfirmScenario0Test() {
-        monthlyCalForScenario(0, 10000, "30", "$59");
+        int amount = 10000;
+        String length = "30";
+        String expectedRate = "$59";
+        int index = 0;
+
+        monthlyCalForScenario(index, amount, length, expectedRate);
         repayCalPage.resetAndConfirm();
         Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
     }
 
     @Test
     public void resetAndCancelScenario0Test() {
-        monthlyCalForScenario(0, 10000, "30", "$59");
+        int amount = 300000;
+        String length = "20";
+        String expectedRate = "$2,113";
+        int index = 0;
+
+        monthlyCalForScenario(index, amount, length, expectedRate);
         repayCalPage.resetAndCancel();
-        logger.debug(NumberFormat.getNumberInstance(Locale.UK).format(10000));
-        Assert.assertEquals("10,000", repayCalPage.getLoanAmountForScenario(0));
+        Assert.assertEquals(CalUtils.formatNumber(amount), repayCalPage.getLoanAmountForScenario(0));
     }
 
 
