@@ -409,6 +409,7 @@ public class RepayCal extends PageBase {
      */
     public void addThisAsAScenario(){
         new Actions(driver).moveToElement(btnAddThisAsAScenario).click().build().perform();
+        logger.trace("Action: Add This As Scenario");
     }
 
     /**
@@ -418,6 +419,7 @@ public class RepayCal extends PageBase {
     public void createANewScenario(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnCreateANewScenario);
         btnCreateANewScenario.click();
+        logger.trace("Action: Create A New Scenario");
     }
 
     /**
@@ -426,11 +428,13 @@ public class RepayCal extends PageBase {
     public void duplicateScenario1(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario1);
         btnDuplicateScenario1.click();
+        logger.trace("Action: Duplicate Scenario 1");
     }
 
     public void duplicateScenario2(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario2);
         btnDuplicateScenario2.click();
+        logger.trace("Action: Duplicate Scenario 2");
     }
 
     //******* General Test Supports: ********
