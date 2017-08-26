@@ -136,17 +136,8 @@ public class RepayCal extends PageBase {
 
     public List<WebElement> getScenarios() {
         List<WebElement> scenarios;
-        new FluentWait<>(driver)
-            .pollingEvery(pollingIntervalMillis, TimeUnit.MILLISECONDS)
-            .withTimeout(pollingTimeOutSecond, TimeUnit.SECONDS)
-            .ignoring(NoSuchElementException.class)
-            .ignoring(StaleElementReferenceException.class)
-            .until((driver) -> {
-                logger.debug("checking scenario panels");
-                return (0 < driver.findElements(scenariosCss).size());
-            });
         scenarios =  driver.findElements(scenariosCss);
-        logger.debug("Scenario panel number=" + scenarios.size());
+        logger.trace("Scenario panel number=" + scenarios.size());
         return scenarios;
     }
 
@@ -289,16 +280,14 @@ public class RepayCal extends PageBase {
      * @return The string value of loan amount on given scenario panel
      */
     public String getResultAmountForScenario(int index){
-        new FluentWait<WebDriver>(driver)
+        return new FluentWait<>(driver)
             .pollingEvery(pollingTimeOutSecond, TimeUnit.MILLISECONDS)
             .withTimeout(pollingTimeOutSecond, TimeUnit.SECONDS)
             .ignoring(NoSuchElementException.class)
-            .until((dr) -> {
+            .until((x) -> {
                 logger.debug("checking result loan amount for scenario: " + index);
-                return (getScenario(index).findElement(resultAmountCss).getText() != null);
+                return getScenario(index).findElement(resultAmountCss).getText();
             });
-
-        return getScenario(index).findElement(resultAmountCss).getText();
     }
 
     // Interests amounts are calculated in monthly, fortnightly and weekly by design.
@@ -307,6 +296,7 @@ public class RepayCal extends PageBase {
     private By resultTotalInterestItems = By.cssSelector(
         "label[for='ScenarioDatas_monthly__TotalInterest'] ~ p"
     );
+
     private By resultTotalCostItems = By.cssSelector(
         "label[for='ScenarioDatas_monthly__TotalCost'] ~ p"
     );
