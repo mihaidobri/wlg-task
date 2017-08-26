@@ -1,7 +1,9 @@
 package me.maxwu.wlg;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import me.maxwu.wlg.models.RepayCal;
 import me.maxwu.wlg.selenium.DriverFactory;
 import org.junit.*;
@@ -114,17 +116,26 @@ public class RepayCalTest {
     @Test
     public void resetNewCalSanityTest() {
         // Reset on a fresh new Repayments Calculator still shows a new empty calculator.
-        repayCalPage.resetCal();
+        repayCalPage.resetAndConfirm();
         // Fresh new page only shows scenario-0
         Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
     }
 
     @Test
-    public void resetScenario0SmokeTest() {
+    public void resetAndConfirmScenario0Test() {
         monthlyCalForScenario(0, 10000, "30", "$59");
-        repayCalPage.resetCal();
+        repayCalPage.resetAndConfirm();
         Assert.assertEquals("", repayCalPage.getLoanAmountForScenario(0));
     }
+
+    @Test
+    public void resetAndCancelScenario0Test() {
+        monthlyCalForScenario(0, 10000, "30", "$59");
+        repayCalPage.resetAndCancel();
+        logger.debug(NumberFormat.getNumberInstance(Locale.UK).format(10000));
+        Assert.assertEquals("10,000", repayCalPage.getLoanAmountForScenario(0));
+    }
+
 
     @Test
     public void scenarioVisibilitiesAddThisAndHideTest() {

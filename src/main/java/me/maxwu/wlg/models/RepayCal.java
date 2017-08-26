@@ -115,10 +115,16 @@ public class RepayCal extends PageBase {
         return CalUtils.isVisibleOnCalculator(we);
     }
 
-    public void resetCal(){
+    public void resetAndConfirm(){
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnReset);
         btnReset.click();
         btnResetConfirm.click();
+    }
+
+    public void resetAndCancel(){
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnReset);
+        btnReset.click();
+        btnResetCancel.click();
     }
 
     // ******** Panels of scenarios and adjustment: ********
