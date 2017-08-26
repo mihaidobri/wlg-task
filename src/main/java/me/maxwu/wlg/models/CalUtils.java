@@ -1,5 +1,7 @@
 package me.maxwu.wlg.models;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +12,19 @@ import org.slf4j.LoggerFactory;
 public class CalUtils {
     private static Logger logger = LoggerFactory.getLogger(CalUtils.class.getName());
 
-    // Whether the element is visible within calculators.
+
+    /**
+     * Return formatted string to present the digital value as displayed on Web based on UK locale.
+     * @param num Number in int.
+     * @return Formatted String value.
+     */
+    public static String formatNumber(int num){
+        return NumberFormat.getNumberInstance(Locale.UK).format(num);
+    }
+
+    /**
+     * Return Whether the element is visible within calculators.
+     */
     public static boolean isVisibleOnCalculator(WebElement we){
         String style = we.getAttribute("style");
 
