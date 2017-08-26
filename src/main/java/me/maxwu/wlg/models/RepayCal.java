@@ -123,12 +123,24 @@ public class RepayCal extends PageBase {
 
     // ******** Panels of scenarios and adjustment: ********
     //
-    @FindBy(css="div.onescenario[id^='Scenario']")
-    // The DOM tree would remove and restore at "reset" action.
-    // Therefore, annotation @CacheLookUp is removed to adapt reset tests.
-    private List<WebElement> scenarios;
+    @FindBy(css="div#js-adjustRepayment")
+    private List<WebElement> adjustRepayment;
+
+    private By scenariosCss = By.cssSelector("div[id^='Scenario']");
 
     public List<WebElement> getScenarios() {
+        List<WebElement> scenarios;
+        new FluentWait<>(driver)
+            .pollingEvery(pollingIntervalMillis, TimeUnit.MILLISECONDS)
+            .withTimeout(pollingTimeOutSecond, TimeUnit.SECONDS)
+            .ignoring(NoSuchElementException.class)
+            .ignoring(StaleElementReferenceException.class)
+            .until((driver) -> {
+                logger.debug("checking scenario panels");
+                return (0 < driver.findElements(scenariosCss).size());
+            });
+        scenarios =  driver.findElements(scenariosCss);
+        logger.debug("Scenario panel number=" + scenarios.size());
         return scenarios;
     }
 
@@ -139,9 +151,6 @@ public class RepayCal extends PageBase {
     public List<Boolean> getScenariosVisibilities(){
         return getScenarios().stream().map(RepayCal::isVisibleOnCalculator).collect(Collectors.toList());
     }
-
-    @FindBy(css="div#js-adjustRepayment")
-    private List<WebElement> adjustRepayment;
 
     // ******** Elements in scenario panel: ********
     //
