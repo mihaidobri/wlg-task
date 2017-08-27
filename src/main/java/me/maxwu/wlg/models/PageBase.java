@@ -135,17 +135,17 @@ public class PageBase implements ISnapable, IMoveIntoAndActable {
     }
 
     public void scrollIntoAndClick(WebElement we, String info){
-        scrollIntoAndClick(driver, we);
         if ((info != null) && (!info.isEmpty())) {
             logger.debug("Scroll into and click on:" + info);
         }
+        scrollIntoAndClick(driver, we);
     }
 
     public void moveToAndClick(WebElement we, String info){
-        moveToAndClick(driver, we);
         if ((info != null) && (!info.isEmpty())) {
             logger.debug("Move to and click on:" + info);
         }
+        moveToAndClick(driver, we);
     }
 
     // Zoom out 10%.
