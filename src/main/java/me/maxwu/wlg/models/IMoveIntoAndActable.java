@@ -35,7 +35,10 @@ public interface IMoveIntoAndActable {
     default void scrollIntoAndClick(WebDriver driver, WebElement we){
         fluentWaitUntilVisible(driver, we);
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", we);
-        we.click();
+        // Originally the action is : we.click();
+        // With ChromeDriver there is a pre-check issue on if the element is clickable.
+        // Therefore, JSexecutor is introduced to work around this check.
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", we);
     }
 
     default void moveToAndClick(WebDriver driver, WebElement we){
