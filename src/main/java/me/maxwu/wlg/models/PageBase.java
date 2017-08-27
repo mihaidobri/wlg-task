@@ -5,6 +5,7 @@ import me.maxwu.wlg.log.TimeStamp;
 import me.maxwu.wlg.selenium.DriverFactory;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -27,7 +28,7 @@ import java.io.File;
  * INFO: For redirected pages, it is suggested to pick URL check with fluent wait.
  * INFO: Fluent wait is only on URL check for now with PageBase sample implementation.
  */
-public class PageBase implements ISnapable {
+public class PageBase implements ISnapable, IMoveIntoAndActable {
     protected WebDriver driver = null;
     private static Logger logger = LoggerFactory.getLogger(PageBase.class.getName());
     private int driverHashCode;
@@ -133,6 +134,20 @@ public class PageBase implements ISnapable {
         return this;
     }
 
+    public void scrollIntoAndClick(WebElement we, String info){
+        scrollIntoAndClick(driver, we);
+        if ((info != null) && (!info.isEmpty())) {
+            logger.debug("Scroll into and click on:" + info);
+        }
+    }
+
+    public void moveToAndClick(WebElement we, String info){
+        moveToAndClick(driver, we);
+        if ((info != null) && (!info.isEmpty())) {
+            logger.debug("Move to and click on:" + info);
+        }
+    }
+
     // Zoom out 10%.
     public PageBase zoomOut(){
         driver.findElement(By.tagName("html")).sendKeys(
@@ -167,6 +182,7 @@ public class PageBase implements ISnapable {
      * @param ms wait time in millis second.
      */
     public  void setImplicitWait(long ms){
+        logger.warn("CAUTION: ImplicitWait set to " + ms + "ms.");
         driver.manage().timeouts().implicitlyWait(1000, TimeUnit.MILLISECONDS);
     }
 

@@ -218,13 +218,39 @@ public class RepayCalTest {
             repayCalPage.getInterestRateForScenario(1)
         );
 
+        // Needs more action on scenario-1 interests rates
+
         repayCalPage.duplicateScenario1();
         Assert.assertEquals(Arrays.asList(true, true, true), repayCalPage.getScenariosVisibilities());
         Assert.assertEquals(
             repayCalPage.getInterestRateForScenario(0),
-            repayCalPage.getInterestRateForScenario(1)
+            repayCalPage.getInterestRateForScenario(2)
         );
     }
+
+    @Test
+    public void scenarioVisibilityDuplicateScenario2Test(){
+        Assert.assertEquals(Arrays.asList(true, false, false), repayCalPage.getScenariosVisibilities());
+
+        monthlyCalForScenario(0, 300000, "30","$1,758");
+
+        // When current scenario panel is added as a scenario, the 2nd scenario panel shall be visible
+        // In addition, the interest rates shall equal.
+        repayCalPage.addThisAsAScenario();
+        Assert.assertEquals(Arrays.asList(true, true, false), repayCalPage.getScenariosVisibilities());
+        Assert.assertEquals(
+            repayCalPage.getInterestRateForScenario(0),
+            repayCalPage.getInterestRateForScenario(1)
+        );
+
+        repayCalPage.duplicateScenario2();
+        Assert.assertEquals(Arrays.asList(true, true, true), repayCalPage.getScenariosVisibilities());
+        Assert.assertEquals(
+            repayCalPage.getInterestRateForScenario(1),
+            repayCalPage.getInterestRateForScenario(2)
+        );
+    }
+
 
     @AfterClass
     public static void afterClass() {

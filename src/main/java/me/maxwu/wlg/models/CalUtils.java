@@ -45,6 +45,7 @@ public class CalUtils {
      */
     public static void waitInMs(int millis){
         try{
+            logger.warn("CAUTION: absolute sleep for diagnose using");
             Thread.sleep(millis);
         }catch (Exception e){
             logger.error("Error in sleep:", e);

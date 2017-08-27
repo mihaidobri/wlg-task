@@ -116,14 +116,12 @@ public class RepayCal extends PageBase {
     }
 
     public void resetAndConfirm(){
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnReset);
-        btnReset.click();
+        scrollIntoAndClick(btnReset, "Reset Button");
         btnResetConfirm.click();
     }
 
     public void resetAndCancel(){
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnReset);
-        btnReset.click();
+        scrollIntoAndClick(btnReset, "Reset Button");
         btnResetCancel.click();
     }
 
@@ -398,8 +396,7 @@ public class RepayCal extends PageBase {
      * The 2nd scenario panel will be visible after the click to show a candidate calculator GUI.
      */
     public void addThisAsAScenario(){
-        new Actions(driver).moveToElement(btnAddThisAsAScenario).click().build().perform();
-        logger.trace("Action: Add This As Scenario");
+        scrollIntoAndClick(btnAddThisAsAScenario,"Add This As Scenario");
     }
 
     /**
@@ -407,32 +404,22 @@ public class RepayCal extends PageBase {
      * The 2nd scenario panel will be visible after the click to show a candidate calculator GUI.
      */
     public void createANewScenario(){
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnCreateANewScenario);
-        btnCreateANewScenario.click();
-        logger.trace("Action: Create A New Scenario");
+        scrollIntoAndClick(btnCreateANewScenario, "Create A New Scenario");
     }
 
     /**
      * Duplicating buttons are only visible when there are two scenarios to choose.
      */
     public void duplicateScenario1(){
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario1);
-        btnDuplicateScenario1.click();
-        logger.trace("Action: Duplicate Scenario 1");
+        scrollIntoAndClick(btnDuplicateScenario1, "Duplicate Scenario 1");
     }
 
     public void duplicateScenario2(){
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", btnDuplicateScenario2);
-        btnDuplicateScenario2.click();
-        logger.trace("Action: Duplicate Scenario 2");
+        scrollIntoAndClick(btnDuplicateScenario2, "Duplicate Scenario 2");
     }
 
     //******* General Test Supports: ********
     //
-    public void saveCalculatorScreenshot(){
-        saveScreenShot("RepaymentsCalculator", outerCalPanel);
-    }
-
     public RepayCal(WebDriver driver){
         super(driver, urlRegEx, titleRegEx);
         PageFactory.initElements(driver, this);
